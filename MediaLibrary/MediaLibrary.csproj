@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="DefaultItemFactory.cs" />
-    <Compile Include="DirectoryStructure.cs" />
     <Compile Include="ItemTypes\Actor.cs" />
     <Compile Include="ItemTypes\Director.cs" />
     <Compile Include="ItemTypes\Episode.cs" />
@@ -62,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IMetadataProvider.cs" />
     <Compile Include="Providers\TvDbProvider.cs" />
+    <Compile Include="Sorting\ItemSorter.cs" />
     <Compile Include="SortOrder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace MediaLibrary
 {
@@ -10,6 +11,18 @@ namespace MediaLibrary
             this.Library = library;
             this.MediaLocation = mediaLocation;
             this.Parent = parent;
+            this.Name = Path.GetFileNameWithoutExtension(mediaLocation.Path);
+        }
+
+
+        public virtual string Name {
+            get;
+            protected set;
+        }
+
+        public virtual string Id {
+            get;
+            protected set;
         }
 
         public MediaLocation MediaLocation  {

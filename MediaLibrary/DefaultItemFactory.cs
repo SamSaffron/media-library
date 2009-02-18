@@ -6,78 +6,42 @@ using Microsoft.Win32;
 namespace MediaLibrary {
     class DefaultItemFactory : IItemFactory {
 
-        public static Dictionary<string, bool> perceivedTypeCache = new Dictionary<string, bool>();
+        
 
-        public Item CreateItem(MediaLocation location, Library library) {
+        public Item CreateItem(MediaLocation location, Library library) 
+        {
+            Item item = null;
+
             if (location.IsFolder) {
-                return new Folder(library, location, null); 
-            }
 
-            if (IsVideo(location.Path)) {
+                // check for HDDVD,DVD,BluRay
+
+                // check for movie 
+                int videoCount = 0;
+                int childFolderCount = 0;
+                foreach (var childLocation in location.Children) {
+                    videoCount += childLocation.IsVideo ? 1 : 0;
+                    childFolderCount += childLocation.IsFolder ? 1 : 0;
+                    // TODO: config setting
+                    if (videoCount > 2 || childFolderCount > 0) break;
+                }
+
+                if (videoCount <= 2 && childFolderCount == 0) {
+                    item = new Movie(library, location, null); 
+                } else {
+                    item = new Folder(library, location, null);
+                }
+            }
+            else if (location.IsVideo) {
                 return new Movie(library, location, null);  
             }
-            return null;
+
+            return item;
         }
 
         public int Priority {
             get { return 0;  }
         }
 
-
-        // I left the hardcoded list, cause the failure mode is better, at least it will show
-        // videos if the codecs are not installed properly
-        private static bool IsVideo(string filename) {
-            //using (new Profiler(filename))
-            {
-                string extension = System.IO.Path.GetExtension(filename).ToLower();
-
-                switch (extension) {
-                    // special case so DVD files are never considered videos
-                    case ".vob":
-                    case ".bup":
-                    case ".ifo":
-                        return false;
-                    case ".rmvb":
-                    case ".mov":
-                    case ".avi":
-                    case ".mpg":
-                    case ".mpeg":
-                    case ".wmv":
-                    case ".mp4":
-                    case ".mkv":
-                    case ".divx":
-                    //case ".iso": // these are not directly playable and need to be handled differently
-                    case ".dvr-ms":
-                    case ".ogm":
-                        return true;
-
-                    default:
-
-                        bool isVideo;
-                        lock (perceivedTypeCache) {
-                            if (perceivedTypeCache.TryGetValue(extension, out isVideo)) {
-                                return isVideo;
-                            }
-                        }
-
-                        string pt = null;
-                        RegistryKey key = Registry.ClassesRoot;
-                        key = key.OpenSubKey(extension);
-                        if (key != null) {
-                            pt = key.GetValue("PerceivedType") as string;
-                        }
-                        if (pt == null) pt = "";
-                        pt = pt.ToLower();
-
-                        lock (perceivedTypeCache) {
-                            perceivedTypeCache[extension] = (pt == "video");
-                        }
-
-                        return perceivedTypeCache[extension];
-                }
-            }
-        }
-   
-    
     }
 }

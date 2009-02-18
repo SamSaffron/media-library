@@ -12,7 +12,7 @@ namespace MediaLibraryTests
     public class BasicTests
     {
         [Test]
-        public void TestStandardUsage()
+        public void APIDemo()
         {
             var config = Configuration.DefaultVideoLibraryConfig; 
             config.RootPaths = new string[] {Path.GetFullPath(@"../../DemoLib")};
@@ -22,8 +22,21 @@ namespace MediaLibraryTests
             Assert.AreEqual(1, items.Count);
 
             var folder = items[0] as Folder;
-            Assert.AreEqual(2, folder.Children.Count); 
+            Assert.AreEqual(2, folder.Children.Count);
 
+            folder.Sort(SortOrder.Name);
+
+            var movies = (Folder)folder.Children[0];
+            var tv = (Folder)folder.Children[1];
+
+            Assert.AreEqual("Movies", movies.Name);
+            Assert.AreEqual("TV", tv.Name);
+
+
+            movies.Sort(SortOrder.Name);
+
+            var fightClub = (Movie)movies[0];
+            
         }
     }
 }
