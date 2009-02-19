@@ -15,7 +15,7 @@ namespace MediaLibraryTests
         public void APIDemo()
         {
             var config = Configuration.DefaultVideoLibraryConfig; 
-            config.RootPaths = new string[] {Path.GetFullPath(@"../../DemoLib")};
+            //config.RootPaths = new string[] {Path.GetFullPath(@"../../DemoLib")};
             var library = Library.Initialize(config);
             var items = library.GetRootItems();
 

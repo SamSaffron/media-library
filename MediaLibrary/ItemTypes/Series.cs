@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MediaLibrary {
     public class Series : Folder {
-        public Series(Library library, MediaLocation mediaLocation, Item parent) : 
+        public Series(Library library, FolderMediaLocation mediaLocation, Item parent) : 
             base(library, mediaLocation, parent) {
 
         }

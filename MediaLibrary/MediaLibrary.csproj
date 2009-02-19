@@ -44,6 +44,12 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="DefaultItemFactory.cs" />
+    <Compile Include="FolderMediaLocation.cs" />
+    <Compile Include="Helpers\Lazy.cs" />
+    <Compile Include="Helpers\SupportForExtensions.cs" />
+    <Compile Include="Helpers\VideoHelpers.cs" />
+    <Compile Include="Interfaces\IFolderMediaLocation.cs" />
+    <Compile Include="Interfaces\IMediaLocation.cs" />
     <Compile Include="ItemTypes\Actor.cs" />
     <Compile Include="ItemTypes\Director.cs" />
     <Compile Include="ItemTypes\Episode.cs" />

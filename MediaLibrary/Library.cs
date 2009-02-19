@@ -24,8 +24,7 @@ namespace MediaLibrary
 
         public IList<Item> GetRootItems() {
             var items = new List<Item>();
-            foreach (var path in config.RootPaths) {
-                var location = new MediaLocation(path);
+            foreach (var location in config.RootLocations) {
                 Item item = CreateItem(location);
                 if (item != null) {
                     items.Add(item);

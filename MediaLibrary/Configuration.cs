@@ -24,12 +24,16 @@ namespace MediaLibrary
             PluginPaths.Add(path);
         }
 
+        public void AddPlugin(IMetadataProvider provider) { 
+        
+        }
+
         public List<IItemFactory> ItemFactories {
             get;
             set;
         }
 
-        public string[] RootPaths {
+        public FolderMediaLocation[] RootLocations {
             get;
             set;
         }

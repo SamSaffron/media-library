@@ -8,7 +8,7 @@ namespace MediaLibrary
 
     public class Folder : Item, IEnumerable<Item>
     {
-        public Folder(Library library, MediaLocation mediaLocation, Item parent) : 
+        public Folder(Library library, FolderMediaLocation  mediaLocation, Item parent) : 
             base(library, mediaLocation, parent) {
 
         }
@@ -31,7 +31,7 @@ namespace MediaLibrary
 
         private List<Item> GetChildren() {
             var children = new List<Item>();
-            foreach (var child in this.MediaLocation.Children) {
+            foreach (var child in (this.MediaLocation as FolderMediaLocation).Children) {
                 var item = Library.CreateItem(child);
                 if (item != null) {
                     item.Parent = this;

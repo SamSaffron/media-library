@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MediaLibrary.Helpers;
 using Microsoft.Win32;
 
 namespace MediaLibrary {
@@ -12,16 +13,17 @@ namespace MediaLibrary {
         {
             Item item = null;
 
-            if (location.IsFolder) {
+            var folderLocation = location as IFolderMediaLocation;
+            if (folderLocation != null) {
 
                 // check for HDDVD,DVD,BluRay
 
                 // check for movie 
                 int videoCount = 0;
                 int childFolderCount = 0;
-                foreach (var childLocation in location.Children) {
-                    videoCount += childLocation.IsVideo ? 1 : 0;
-                    childFolderCount += childLocation.IsFolder ? 1 : 0;
+                foreach (var childLocation in folderLocation.Children) {
+                    videoCount += childLocation.IsVideo() ? 1 : 0;
+                    childFolderCount += childLocation is FolderMediaLocation ? 1 : 0;
                     // TODO: config setting
                     if (videoCount > 2 || childFolderCount > 0) break;
                 }
@@ -29,10 +31,10 @@ namespace MediaLibrary {
                 if (videoCount <= 2 && childFolderCount == 0) {
                     item = new Movie(library, location, null); 
                 } else {
-                    item = new Folder(library, location, null);
+                    item = new Folder(library, location as FolderMediaLocation, null);
                 }
             }
-            else if (location.IsVideo) {
+            else if (location.IsVideo() ) {
                 return new Movie(library, location, null);  
             }
 
