@@ -22,7 +22,7 @@ namespace MediaLibrary {
                 int childFolderCount = 0;
                 foreach (var childLocation in folderLocation.Children) {
                     videoCount += childLocation.IsVideo() ? 1 : 0;
-                    childFolderCount += childLocation is FolderMediaLocation ? 1 : 0;
+                    childFolderCount += childLocation is IFolderMediaLocation ? 1 : 0;
                     // TODO: config setting
                     if (videoCount > 2 || childFolderCount > 0) break;
                 }
@@ -30,7 +30,7 @@ namespace MediaLibrary {
                 if (videoCount <= 2 && childFolderCount == 0) {
                     item = new Movie(library, location, null); 
                 } else {
-                    item = new Folder(library, location as FolderMediaLocation, null);
+                    item = new Folder(library, location as IFolderMediaLocation, null);
                 }
             }
             else if (location.IsVideo() ) {

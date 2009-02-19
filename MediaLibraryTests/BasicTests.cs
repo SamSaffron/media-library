@@ -14,13 +14,28 @@ namespace MediaLibraryTests
         [Test]
         public void APIDemo()
         {
-            var config = Configuration.DefaultVideoLibraryConfig; 
-            //config.RootPaths = new string[] {Path.GetFullPath(@"../../DemoLib")};
+            var config = Configuration.DefaultVideoLibraryConfig;
+
+            config.RootLocations = MockFolderMediaLocation.CreateMockLocations(
+@"
+|DemoLib
+ |Movies
+  |Fight Club
+   part1.avi
+   part2.avi
+  |Rushmore
+   movie.mpg
+ |TV
+  |The Simpsons
+   |Season 1
+    01.avi
+    02.mkv
+");
+
             var library = Library.Initialize(config);
             var items = library.GetRootItems();
 
             Assert.AreEqual(1, items.Count);
-
             var folder = items[0] as Folder;
             Assert.AreEqual(2, folder.Children.Count);
 

@@ -33,7 +33,7 @@ namespace MediaLibrary
             set;
         }
 
-        public FolderMediaLocation[] RootLocations {
+        public IFolderMediaLocation[] RootLocations {
             get;
             set;
         }

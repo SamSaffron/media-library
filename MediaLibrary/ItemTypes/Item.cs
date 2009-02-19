@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using MediaLibrary.Helpers;
 
 namespace MediaLibrary
 {
@@ -9,23 +10,33 @@ namespace MediaLibrary
     {
         public Item(Library library, IMediaLocation mediaLocation, Item parent) {
             this.Library = library;
-            this.MediaLocation = mediaLocation;
+            this.Location = mediaLocation.Path;
             this.Parent = parent;
             this.Name = Path.GetFileNameWithoutExtension(mediaLocation.Path);
+            this.id = mediaLocation.Path.GetMD5();
         }
-
 
         public virtual string Name {
             get;
             protected set;
         }
 
-        public virtual string Id {
+        public virtual string DateModified {
             get;
             protected set;
         }
 
-        public IMediaLocation MediaLocation  {
+        Guid id; 
+        public virtual Guid Id {
+            get {
+                return id;
+            }
+            set {
+                this.id = value;
+            }
+        }
+
+        public string Location  {
             get;
             protected set;
         }

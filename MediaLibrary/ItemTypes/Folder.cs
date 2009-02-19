@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MediaLibrary.Helpers;
 
 namespace MediaLibrary
 {
@@ -8,30 +9,23 @@ namespace MediaLibrary
 
     public class Folder : Item, IEnumerable<Item>
     {
-        public Folder(Library library, FolderMediaLocation  mediaLocation, Item parent) : 
+        public Folder(Library library, IFolderMediaLocation  mediaLocation, Item parent) : 
             base(library, mediaLocation, parent) {
-
+            children = new Lazy<List<Item>>(() => GetChildren(mediaLocation)); 
         }
 
-        private List<Item> children; 
+        private Lazy<List<Item>> children; 
         public IList<Item> Children
         {
             get
             {
-                EnsureChildrenLoaded();
-                return children;
+                return children.Value;
             }
         }
 
-        private void EnsureChildrenLoaded() {
-            if (children == null) {
-                children = GetChildren();
-            }
-        }
-
-        private List<Item> GetChildren() {
+        private List<Item> GetChildren(IFolderMediaLocation mediaLocation) {
             var children = new List<Item>();
-            foreach (var child in (this.MediaLocation as FolderMediaLocation).Children) {
+            foreach (var child in mediaLocation.Children) {
                 var item = Library.CreateItem(child);
                 if (item != null) {
                     item.Parent = this;
@@ -43,8 +37,7 @@ namespace MediaLibrary
 
         public void Sort(SortOrder sortOrder)
         {
-            EnsureChildrenLoaded();
-            children.Sort(new ItemSorter(sortOrder)); 
+            children.Value.Sort(new ItemSorter(sortOrder)); 
         }
 
         ChildrenChangedEvent OnChildrenChanged;
@@ -56,7 +49,7 @@ namespace MediaLibrary
             }
         }
 
-        public IEnumerator<Item>  GetEnumerator()
+        public IEnumerator<Item> GetEnumerator()
         {
             return Children.GetEnumerator();
         }
