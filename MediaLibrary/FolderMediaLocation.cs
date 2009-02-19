@@ -10,10 +10,10 @@ namespace MediaLibrary {
         internal FolderMediaLocation(string path, FolderMediaLocation parent) 
             : base(path, parent) 
         {
-            children = new Lazy<IList<MediaLocation>>(GetChildren);
+            children = new Lazy<IList<IMediaLocation>>(GetChildren);
         }
 
-        public IList<MediaLocation> Children {
+        public IList<IMediaLocation> Children {
             get {
                 return children.Value;
             }
@@ -21,10 +21,10 @@ namespace MediaLibrary {
 
         #region private
 
-        Lazy<IList<MediaLocation>> children;
+        Lazy<IList<IMediaLocation>> children;
 
-        private IList<MediaLocation> GetChildren() {
-            var children = new List<MediaLocation>();
+        private IList<IMediaLocation> GetChildren() {
+            var children = new List<IMediaLocation>();
             foreach (var file in Directory.GetFiles(Path)) {
 
                 // special handling for virtual folders and shortcuts goes here

@@ -7,7 +7,7 @@ namespace MediaLibrary
 {
     public abstract class Item
     {
-        public Item(Library library, MediaLocation mediaLocation, Item parent) {
+        public Item(Library library, IMediaLocation mediaLocation, Item parent) {
             this.Library = library;
             this.MediaLocation = mediaLocation;
             this.Parent = parent;
@@ -25,7 +25,7 @@ namespace MediaLibrary
             protected set;
         }
 
-        public MediaLocation MediaLocation  {
+        public IMediaLocation MediaLocation  {
             get;
             protected set;
         }

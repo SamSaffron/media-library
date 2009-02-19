@@ -7,7 +7,7 @@ using MediaLibrary;
 namespace MediaLibraryTests {
     class MockMediaLocation : IMediaLocation {
 
-        public FolderMediaLocation Parent {
+        public IFolderMediaLocation Parent {
             get;
             set;
         }

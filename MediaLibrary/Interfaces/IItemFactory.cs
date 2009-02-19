@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MediaLibrary {
     public interface IItemFactory {
-        Item CreateItem(MediaLocation location, Library library);
+        Item CreateItem(IMediaLocation location, Library library);
        
         // TODO: Consider adding priority if required
         // int Priority { get; }

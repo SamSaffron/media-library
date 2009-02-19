@@ -33,7 +33,7 @@ namespace MediaLibrary
             return items;
         }
 
-        internal Item CreateItem(MediaLocation location) {
+        internal Item CreateItem(IMediaLocation location) {
             Item item = null;
             foreach (var factory in config.ItemFactories) {
                 item = factory.CreateItem(location, this);

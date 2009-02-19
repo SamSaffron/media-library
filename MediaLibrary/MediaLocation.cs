@@ -14,6 +14,6 @@ namespace MediaLibrary {
         }
 
         public string Path { get; set;}
-        public FolderMediaLocation Parent { get; set; }
+        public IFolderMediaLocation Parent { get; set; }
     }
 }

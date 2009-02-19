@@ -56,7 +56,7 @@ namespace MediaLibrary.Helpers {
 
         #region MediaLocation extensions
 
-        public static bool IsVideo(this MediaLocation location) {
+        public static bool IsVideo(this IMediaLocation location) {
             return IsVideo(location.Path);
         }
 
