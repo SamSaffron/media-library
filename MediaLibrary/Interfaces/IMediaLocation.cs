@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 namespace MediaLibrary {
     public interface IMediaLocation {
-        IFolderMediaLocation Parent { get; set; }
-        string Path { get; set; }
+        IFolderMediaLocation Parent { get; }
+        string Path { get; }
+        Guid Id {get; }
     }
 }

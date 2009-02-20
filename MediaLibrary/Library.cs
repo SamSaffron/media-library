@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MediaLibrary.Providers;
+using MediaLibrary.Helpers;
 
 namespace MediaLibrary
 {
@@ -25,7 +26,7 @@ namespace MediaLibrary
         public IList<Item> GetRootItems() {
             var items = new List<Item>();
             foreach (var location in config.RootLocations) {
-                Item item = CreateItem(location);
+                Item item = GetItem(location);
                 if (item != null) {
                     items.Add(item);
                 }
@@ -42,9 +43,22 @@ namespace MediaLibrary
             return item; 
         }
 
-        public Item GetItem(string path)
+        public Item GetItem(IMediaLocation location)
         {
-            throw new NotImplementedException(); 
+            Item item = null; 
+
+            if (config.ItemRepository != null) {
+                item = config.ItemRepository.GetItem<Item>(location.Id);
+                if (config.ValidateItems && !item.IsValid()) {
+                    item = null;
+                }
+            }
+
+            if (item == null) {
+                item = CreateItem(location);
+            }
+
+            return item;
         }
 
         public IMetadataProvider GetProvider(Type type)

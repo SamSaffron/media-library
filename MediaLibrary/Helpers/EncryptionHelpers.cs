@@ -4,7 +4,7 @@ using System.Text;
 using System.Security.Cryptography;
 
 namespace MediaLibrary.Helpers {
-    static class EncryptionHelpers {
+    public static class EncryptionHelpers {
 
         static MD5CryptoServiceProvider md5Provider = new MD5CryptoServiceProvider();
 

@@ -23,10 +23,12 @@ namespace MediaLibrary
             }
         }
 
+        public int UnwatchedCount { get; private set; }
+
         private List<Item> GetChildren(IFolderMediaLocation mediaLocation) {
             var children = new List<Item>();
             foreach (var child in mediaLocation.Children) {
-                var item = Library.CreateItem(child);
+                var item = Library.GetItem(child);
                 if (item != null) {
                     item.Parent = this;
                     children.Add(item);

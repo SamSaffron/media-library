@@ -66,12 +66,21 @@
     <Compile Include="MediaLocation.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="MetadataFragment.cs" />
+    <Compile Include="ORM\Attributes\ColumnAttribute.cs" />
+    <Compile Include="ORM\Attributes\IndexAttribute.cs" />
+    <Compile Include="ORM\Attributes\PrimaryKeyAttribute.cs" />
+    <Compile Include="ORM\ColumnDefinition.cs" />
+    <Compile Include="ORM\ColumnProperties.cs" />
+    <Compile Include="ORM\IndexDefinition.cs" />
     <Compile Include="ORM\ItemRepository.cs" />
+    <Compile Include="ORM\Schema.cs" />
+    <Compile Include="ORM\TableCreator.cs" />
+    <Compile Include="ORM\TableDefinition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IMetadataProvider.cs" />
     <Compile Include="Providers\TvDbProvider.cs" />
     <Compile Include="Sorting\ItemSorter.cs" />
-    <Compile Include="SortOrder.cs" />
+    <Compile Include="Sorting\SortOrder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

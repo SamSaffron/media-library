@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MediaLibrary.ORM;
 
 namespace MediaLibrary
 {
@@ -16,6 +17,7 @@ namespace MediaLibrary
 
         public Configuration() {
             PluginPaths = new List<string>();
+            ValidateItems = true;
         }
 
         internal List<string> PluginPaths {get; private set; }
@@ -28,14 +30,13 @@ namespace MediaLibrary
         
         }
 
-        public List<IItemFactory> ItemFactories {
-            get;
-            set;
-        }
+        public List<IItemFactory> ItemFactories { get; set; }
 
-        public IFolderMediaLocation[] RootLocations {
-            get;
-            set;
-        }
+        public bool ValidateItems { get; set; } 
+
+        public ItemRepository ItemRepository { get; set; }
+        public IFolderMediaLocation[] RootLocations { get; set; }
+
+        
     }
 }

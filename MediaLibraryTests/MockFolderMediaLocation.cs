@@ -22,7 +22,7 @@ namespace MediaLibraryTests {
 
         class Builder {
 
-            private IFolderMediaLocation location = new MockFolderMediaLocation();
+            private MockFolderMediaLocation location = new MockFolderMediaLocation();
 
             public Builder() {
                 location.Path = "";
@@ -31,7 +31,7 @@ namespace MediaLibraryTests {
             public void AddParent(RowInfo info,int depth) {
                 while (depth > 0) {
                     depth--;
-                    location = location.Parent;
+                    location = (MockFolderMediaLocation)location.Parent;
                 }
                 AddSibling(info);
             }
@@ -40,7 +40,7 @@ namespace MediaLibraryTests {
                 AddSibling(info);
             }
             public void AddSibling(RowInfo info) {
-                IMediaLocation newLocation;
+                MockMediaLocation newLocation;
                 if (info.IsFolder) {
                     newLocation = new MockFolderMediaLocation();
                 } else {
@@ -60,7 +60,7 @@ namespace MediaLibraryTests {
                     var root = location;
                     while (true) {
                         if (root.Parent != null) {
-                            root = root.Parent;
+                            root = (MockFolderMediaLocation)root.Parent;
                         } else {
                             break;
                         }
