@@ -46,14 +46,13 @@ namespace MediaLibraryTests {
 
             var movie = new Movie();
             movie.Name = "MyMovie";
-            
+            movie.IsWatched = true;
+
             repository.SaveItem(movie);
 
-            Assert.AreEqual("MyMovie", movie.Name);
-
             var movie2 = repository.GetItem<Movie>(movie.Id);
-
             Assert.AreEqual(movie.Name, movie2.Name);
+            Assert.AreEqual(true, movie2.IsWatched);
         }
 
     }

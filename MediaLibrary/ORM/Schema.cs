@@ -57,7 +57,7 @@ namespace MediaLibrary.ORM {
             
         }
 
-        private static bool HasAttribute(PropertyInfo info, Type type) { 
+        internal static bool HasAttribute(PropertyInfo info, Type type) { 
             foreach (var attribute in info.GetCustomAttributes(false)) {
                 if (attribute.GetType() ==  type) {
                     return true;

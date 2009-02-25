@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data.SQLite;
 using System.Diagnostics;
+using MediaLibrary.ORM.Attributes;
 
 namespace MediaLibrary.ORM {
     
@@ -64,7 +65,36 @@ namespace MediaLibrary.ORM {
             while (reader.Read())
             {
                 instance.Id = reader.GetGuid(0);
-                instance.Name = reader.GetString(1);
+                // this should be refactored. 
+                foreach (var property in type.GetProperties()) {
+                    if (Schema.HasAttribute(property, typeof(ColumnAttribute)))
+                    {
+                        var ordinal = reader.GetOrdinal(property.Name);
+
+                        object value;
+                        Type propType = property.PropertyType;
+
+                        if (propType == typeof(bool)) {
+                            value = reader.GetBoolean(ordinal);
+                        }
+                        else if (propType == typeof(Int32))
+                        {
+                            value = reader.GetInt32(ordinal);
+                        } 
+                        else if (propType == typeof(DateTime)) {
+                            value = reader.GetDateTime(ordinal);
+                        }
+                        else  
+                        {
+                            value = reader.GetValue(ordinal);
+                        }
+                        if (value != DBNull.Value) {
+                            property.SetValue(instance, value, null);
+                        }
+                    }
+                }
+ 
+                instance.Id = reader.GetGuid(reader.GetOrdinal("Id"));
 
                 break; 
             }
