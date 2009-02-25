@@ -12,17 +12,16 @@ namespace MediaLibrary.ORM {
     public class ItemRepository {
 
         static Schema schema = LoadSchema();
+        static TableDefinition itemTypeTable = new TableDefinition(ItemTypeTableName).
+                AddColumn("Id", typeof(Guid), ColumnProperties.PrimaryKey).
+                AddColumn("Type", typeof(string)); 
+
         const string ItemTypeTableName = "ItemType";
 
         private static Schema LoadSchema() {
             var schema = Schema.DiscoverSchema();
-            schema.Add(new TableDefinition(ItemTypeTableName).
-                AddColumn("Id", typeof(Guid), ColumnProperties.PrimaryKey).
-                AddColumn("Type", typeof(string))
-                );
             return schema;
         } 
-
 
         SQLiteConnection connection;
 
@@ -39,13 +38,42 @@ namespace MediaLibrary.ORM {
                 foreach (var tableDef in schema) {
                     creator.Create(tableDef);
                 }
+                creator.Create(itemTypeTable);
                 transaction.Commit();
             }
         }
 
         public T GetItem<T>(Guid id) where T : Item
         {
-            throw new NotImplementedException();
+            Type type = typeof(T);
+            object instance = type.GetConstructor(null).Invoke(null);
+            StringBuilder sql = new StringBuilder();
+            sql.Append("SELECT * FROM Item\n");
+            foreach (var table in GetTables(typeof(T))) {
+                if (table.TableName == "Item") continue;
+  
+                sql.Append("JOIN ").
+                    Append(table.TableName).
+                    Append(" ON Item.Id = ").
+                    Append(table.TableName).
+                    Append(".ItemId\n");  
+            }
+
+            using (var command = CreateCommand(sql.ToString()))
+            using (var reader = command.ExecuteReader()) 
+            while (reader.Read())
+            {
+
+                break; 
+            }
+
+            return instance as T;
+        }
+
+        private SQLiteCommand CreateCommand(string commandText) {
+            var command = connection.CreateCommand();
+            command.CommandText = commandText;
+            return command;
         }
 
         public void SaveItem(Item item) {
@@ -54,16 +82,18 @@ namespace MediaLibrary.ORM {
 
             using (var tran = connection.BeginTransaction()) {
 
+                using (var itemTypeCommand = GetCommand(itemTypeTable)) {
+                    itemTypeCommand.Parameters["@Id"].Value = item.Id;
+                    itemTypeCommand.Parameters["@Type"].Value = item.GetType().Name;
+                    itemTypeCommand.ExecuteNonQuery();
+                }
+
                 foreach (var tableDef in GetTables(item.GetType())) {
                     var command = GetCommand(tableDef);
                     foreach (SQLiteParameter param in command.Parameters) {
                         if (param.ParameterName == "@Id" || param.ParameterName == "@ItemId") 
                         {
                             param.Value = item.Id;
-                        } 
-                        else if (param.ParameterName == "@Type" && tableDef.TableName == ItemTypeTableName)
-                        {
-                            param.Value = item.GetType().Name; 
                         } 
                         else 
                         {
@@ -130,11 +160,6 @@ namespace MediaLibrary.ORM {
 
             var tables = new List<TableDefinition>();
             foreach (var tableDef in schema) {
-
-                if (tableDef.TableName == ItemTypeTableName) {
-                    tables.Add(tableDef);
-                    continue;
-                }
 
                 var baseType = type; 
                 while(baseType != null) 

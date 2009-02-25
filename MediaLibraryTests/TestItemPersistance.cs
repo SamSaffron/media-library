@@ -13,6 +13,12 @@ namespace MediaLibraryTests {
     public class TestItemPersistance {
 
         [Test]
+        public void TestDbMigration() { 
+        
+        }
+
+
+        [Test]
         public void TestSchemaExtraction() {
             var schema = Schema.DiscoverSchema();
 

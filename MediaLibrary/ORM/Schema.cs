@@ -18,7 +18,9 @@ namespace MediaLibrary.ORM {
             foreach (var type in assembly.GetTypes()) 
             {
                 var def = ExtractTableDefinition(type);
-                if (def != null) schema.Add(def); 
+                if (def != null && def.ColumnDefinitions.Count > 1) {
+                    schema.Add(def);
+                }
             }
             return schema;
         }
@@ -67,7 +69,7 @@ namespace MediaLibrary.ORM {
       
 
         private static bool IsItem(Type type) {
-            return type.IsSubclassOf(typeof(Item)); 
+            return type.IsSubclassOf(typeof(Item)) || type == typeof(Item); 
         }
 
         private Schema ()
