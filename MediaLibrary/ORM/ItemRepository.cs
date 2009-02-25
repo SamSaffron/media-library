@@ -44,10 +44,47 @@ namespace MediaLibrary.ORM {
             }
         }
 
+        public IList<Item> GetItems(Guid parentId)
+        {
+
+            List<Item> items = new List<Item>();
+
+            StringBuilder sql = new StringBuilder();
+            sql.AppendLine("SELECT ItemType.Type, * FROM Item").
+                AppendLine("JOIN ItemType on Item.Id = ItemType.Id");
+            foreach (var table in schema) {
+                if (table.TableName == "Item") continue;
+
+                sql.Append("JOIN ").
+                    Append(table.TableName).
+                    Append(" ON Item.Id = ").
+                    Append(table.TableName).
+                    AppendLine(".ItemId");
+            }
+
+            sql.AppendLine("WHERE Item.Parent = @Guid");
+
+            using (var command = CreateCommand(sql.ToString())) {
+                var param = command.CreateParameter();
+                param.ParameterName = "@Guid";
+                param.Value = parentId;
+                command.Parameters.Add(param);
+                using (var reader = command.ExecuteReader())
+                while (reader.Read()) {
+
+                    Item instance = ConstructDefaultInstance(schema.MappedTypes[reader.GetString(0)]) as Item;
+                    PopulateInstance(reader, instance);
+                    items.Add(instance);
+                }
+
+                return items;
+            }
+        }
+
         public T GetItem<T>(Guid id) where T : Item
         {
             Type type = typeof(T);
-            T instance = type.GetConstructor(Type.EmptyTypes).Invoke(null) as T;
+            T instance = ConstructDefaultInstance(type) as T;
             StringBuilder sql = new StringBuilder();
             sql.Append("SELECT * FROM Item\n");
             foreach (var table in GetTables(typeof(T))) {
@@ -64,42 +101,47 @@ namespace MediaLibrary.ORM {
             using (var reader = command.ExecuteReader()) 
             while (reader.Read())
             {
-                instance.Id = reader.GetGuid(0);
-                // this should be refactored. 
-                foreach (var property in type.GetProperties()) {
-                    if (Schema.HasAttribute(property, typeof(ColumnAttribute)))
-                    {
-                        var ordinal = reader.GetOrdinal(property.Name);
-
-                        object value;
-                        Type propType = property.PropertyType;
-
-                        if (propType == typeof(bool)) {
-                            value = reader.GetBoolean(ordinal);
-                        }
-                        else if (propType == typeof(Int32))
-                        {
-                            value = reader.GetInt32(ordinal);
-                        } 
-                        else if (propType == typeof(DateTime)) {
-                            value = reader.GetDateTime(ordinal);
-                        }
-                        else  
-                        {
-                            value = reader.GetValue(ordinal);
-                        }
-                        if (value != DBNull.Value) {
-                            property.SetValue(instance, value, null);
-                        }
-                    }
-                }
- 
-                instance.Id = reader.GetGuid(reader.GetOrdinal("Id"));
-
+                PopulateInstance(reader, instance);
                 break; 
             }
 
             return instance;
+        }
+
+        private static object ConstructDefaultInstance(Type type) {
+            return type.GetConstructor(Type.EmptyTypes).Invoke(null);
+        }
+
+        private static void PopulateInstance (SQLiteDataReader reader, Item instance) 
+        {
+            // this should be refactored. 
+            foreach (var property in instance.GetType().GetProperties()) {
+                if (Schema.HasAttribute(property, typeof(ColumnAttribute))) {
+                    var ordinal = reader.GetOrdinal(property.Name);
+
+                    object value;
+                    Type propType = property.PropertyType;
+
+                    if (propType == typeof(bool)) {
+                        value = reader.GetBoolean(ordinal);
+                    } else if (propType == typeof(Int32)) {
+                        value = reader.GetInt32(ordinal);
+                    } else if (propType == typeof(DateTime)) {
+                        value = reader.GetDateTime(ordinal);
+                    } else if (propType == typeof(Item)) {
+                        // TODO : Implement this 
+                        value = DBNull.Value; 
+                    } else {
+                        value = reader.GetValue(ordinal);
+                    }
+                    
+                    if (value != DBNull.Value) {
+                        property.SetValue(instance, value, null);
+                    }
+                }
+            }
+
+            instance.Id = reader.GetGuid(reader.GetOrdinal("Id"));
         }
 
         private SQLiteCommand CreateCommand(string commandText) {
@@ -130,7 +172,12 @@ namespace MediaLibrary.ORM {
                         else 
                         {
                             string propertyName = param.ParameterName.Substring(1);
-                            param.Value = item.GetType().GetProperty(propertyName).GetValue(item, null); 
+                            var property = item.GetType().GetProperty(propertyName);
+                            object value = property.GetValue(item, null);
+                            if (value is Item) {
+                                value = (value as Item).Id;
+                            }
+                            param.Value = value; 
                         }
                     }
                     command.ExecuteNonQuery();
@@ -139,10 +186,6 @@ namespace MediaLibrary.ORM {
                 tran.Commit();
             }
         }
-
-        public void SaveItem(Item item, bool saveChildren) {
-        }
-
 
         private SQLiteCommand GetCommand(TableDefinition def) {
 

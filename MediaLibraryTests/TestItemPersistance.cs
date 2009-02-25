@@ -13,8 +13,21 @@ namespace MediaLibraryTests {
     public class TestItemPersistance {
 
         [Test]
-        public void TestDbMigration() { 
-        
+        public void TestGetItems() {
+            var repository = CreateRepository();
+
+            Folder folder = new Folder();
+            folder.Id = Guid.NewGuid();
+            repository.SaveItem(folder);
+
+            for (int i = 0; i < 30; i++) {
+                var movie = new Movie();
+                movie.Id = Guid.NewGuid();
+                movie.Name = "MyMovie" + i.ToString();
+                movie.Parent = folder;
+                repository.SaveItem(movie);
+            }
+            Assert.AreEqual(30, repository.GetItems(folder.Id).Count);
         }
 
 
@@ -39,10 +52,7 @@ namespace MediaLibraryTests {
         [Test]
         public void TestMovieSaving()
         {
-            var db = "test.db";
-            if (File.Exists(db)) File.Delete(db);
-            var repository = new ItemRepository(db);
-            repository.MigrateSchema();
+            var repository = CreateRepository();
 
             var movie = new Movie();
             movie.Name = "MyMovie";
@@ -53,6 +63,14 @@ namespace MediaLibraryTests {
             var movie2 = repository.GetItem<Movie>(movie.Id);
             Assert.AreEqual(movie.Name, movie2.Name);
             Assert.AreEqual(true, movie2.IsWatched);
+        }
+
+        private static ItemRepository CreateRepository() {
+            var db = "test.db";
+            if (File.Exists(db)) File.Delete(db);
+            var repository = new ItemRepository(db);
+            repository.MigrateSchema();
+            return repository;
         }
 
     }

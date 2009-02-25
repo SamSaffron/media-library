@@ -18,8 +18,12 @@ namespace MediaLibrary.ORM {
             foreach (var type in assembly.GetTypes()) 
             {
                 var def = ExtractTableDefinition(type);
-                if (def != null && def.ColumnDefinitions.Count > 1) {
-                    schema.Add(def);
+                if (def != null) 
+                {
+                    if (def.ColumnDefinitions.Count > 1) {
+                        schema.Add(def);
+                    }
+                    schema.MappedTypes[type.Name] = type;
                 }
             }
             return schema;
@@ -76,5 +80,7 @@ namespace MediaLibrary.ORM {
 	    {
 
 	    }
+
+        public Dictionary<string, Type> MappedTypes = new Dictionary<string, Type>();
     }
 }
