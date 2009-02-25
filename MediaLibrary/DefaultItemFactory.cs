@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MediaLibrary.Helpers;
 using Microsoft.Win32;
+using System.IO;
 
 namespace MediaLibrary {
     class DefaultItemFactory : IItemFactory {
@@ -28,13 +29,21 @@ namespace MediaLibrary {
                 }
 
                 if (videoCount <= 2 && childFolderCount == 0) {
-                    item = new Movie(library, location, null); 
+                    item = new Movie(); 
                 } else {
-                    item = new Folder(library, location as IFolderMediaLocation, null);
+                    var folder = new Folder();
+                    folder.Location = folderLocation;
+                    item = folder;  
                 }
             }
             else if (location.IsVideo() ) {
-                return new Movie(library, location, null);  
+                item = new Movie();  
+            }
+
+            if (item != null) {
+                item.Library = library;
+                item.Name = Path.GetFileNameWithoutExtension(location.Path);
+                item.Uri = location.Path;
             }
 
             return item;

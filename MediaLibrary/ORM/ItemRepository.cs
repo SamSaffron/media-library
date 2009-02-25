@@ -46,7 +46,7 @@ namespace MediaLibrary.ORM {
         public T GetItem<T>(Guid id) where T : Item
         {
             Type type = typeof(T);
-            object instance = type.GetConstructor(null).Invoke(null);
+            T instance = type.GetConstructor(Type.EmptyTypes).Invoke(null) as T;
             StringBuilder sql = new StringBuilder();
             sql.Append("SELECT * FROM Item\n");
             foreach (var table in GetTables(typeof(T))) {
@@ -63,11 +63,13 @@ namespace MediaLibrary.ORM {
             using (var reader = command.ExecuteReader()) 
             while (reader.Read())
             {
+                instance.Id = reader.GetGuid(0);
+                instance.Name = reader.GetString(1);
 
                 break; 
             }
 
-            return instance as T;
+            return instance;
         }
 
         private SQLiteCommand CreateCommand(string commandText) {

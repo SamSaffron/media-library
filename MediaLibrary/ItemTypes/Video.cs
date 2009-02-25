@@ -5,10 +5,6 @@ using MediaLibrary.ORM.Attributes;
 
 namespace MediaLibrary {
     public class Video : Item {
-        public Video(Library library, IMediaLocation mediaLocation, Item parent) : 
-            base(library, mediaLocation, parent) {
-
-        }
 
         [Column]
         public bool IsWatched { get; set; }

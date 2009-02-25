@@ -28,8 +28,12 @@ namespace MediaLibraryTests {
                 col => col.Name == "Id" && col.IsPrimaryKey && col.Type == typeof(Guid) )
                 );
 
-            var movieDef = schema.Find(def => def.TableName == "Movie");
-            Assert.IsFalse(movieDef.ColumnDefinitions.Exists(col => col.Name == "Id")); 
+            var movieDef = schema.Find(def => def.TableName == "Video");
+            Assert.IsFalse(movieDef.ColumnDefinitions.Exists(col => col.Name == "Id"));
+
+            // should not create tables for objects with no new properties 
+            var actorDef = schema.Find(def => def.TableName == "Actor");
+            Assert.IsNull(actorDef);
         }
 
         [Test]
@@ -40,8 +44,9 @@ namespace MediaLibraryTests {
             var repository = new ItemRepository(db);
             repository.MigrateSchema();
 
-            var movie = new Movie(null, new MockMediaLocation("MyMovie.avi"), null);
-
+            var movie = new Movie();
+            movie.Name = "MyMovie";
+            
             repository.SaveItem(movie);
 
             Assert.AreEqual("MyMovie", movie.Name);

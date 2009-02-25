@@ -11,15 +11,7 @@ namespace MediaLibrary
     public abstract class Item
     {
         Guid id;
-
-        public Item(Library library, IMediaLocation mediaLocation, Item parent) {
-            this.Library = library;
-            this.Location = mediaLocation.Path;
-            this.Parent = parent;
-            this.Name = Path.GetFileNameWithoutExtension(mediaLocation.Path);
-            this.id = mediaLocation.Id;
-        }
-
+          
         public virtual bool IsValid() {
             return true;
         }
@@ -33,30 +25,30 @@ namespace MediaLibrary
         [Column]
         public virtual string Name {
             get;
-            protected set;
+            set;
         }
 
         [Column]
         public virtual string DateModified {  
             get; 
-            protected set; 
+            set; 
         }
 
         [Column]
-        public string Location  {
+        public string Uri  {
             get;
-            protected set;
+            set;
         }
 
         [Column]
         public Item Parent {
             get;
-            internal set;
+            set;
         }
 
         public Library Library {
             get;
-            protected set;
+            set;
         }
         
         public Metadata Metadata {

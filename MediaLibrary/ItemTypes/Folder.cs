@@ -9,9 +9,11 @@ namespace MediaLibrary
 
     public class Folder : Item, IEnumerable<Item>
     {
-        public Folder(Library library, IFolderMediaLocation  mediaLocation, Item parent) : 
-            base(library, mediaLocation, parent) {
-            children = new Lazy<List<Item>>(() => GetChildren(mediaLocation)); 
+
+        public IFolderMediaLocation Location {
+            set {
+                children = new Lazy<List<Item>>(() => GetChildren(value));
+            }
         }
 
         private Lazy<List<Item>> children; 
