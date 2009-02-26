@@ -11,12 +11,20 @@ namespace MediaLibraryTests
     [TestFixture]
     public class BasicTests
     {
+
+        [Test]
+        public void TestLibraryRepositoryInteracation() { 
+           
+        
+        }
+
+
         [Test]
         public void APIDemo()
         {
             var config = Configuration.DefaultVideoLibraryConfig;
 
-            config.RootLocations = MockFolderMediaLocation.CreateMockLocations(
+            config.RootLocations.AddRange(MockFolderMediaLocation.CreateMockLocations(
 @"
 |DemoLib
  |Movies
@@ -30,7 +38,7 @@ namespace MediaLibraryTests
    |Season 1
     01.avi
     02.mkv
-");
+"));
 
             var library = Library.Initialize(config);
             var items = library.GetRootItems();
