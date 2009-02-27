@@ -8,18 +8,19 @@ namespace MediaLibrary
     public class Configuration
     {
 
-        private List<IFolderMediaLocation> rootLocations = new List<IFolderMediaLocation>();
+        private List<IMediaLocation> rootLocations = new List<IMediaLocation>();
 
         public static Configuration DefaultVideoLibraryConfig {
             get {
                 var config = new Configuration();
-                config.ItemFactories = new List<IItemFactory>() { new DefaultItemFactory() };
+                config.ItemFactories = new List<IItemFactory>() { new ItemFactory() };
                 return config;
             }
         }
 
         public Configuration() {
             PluginPaths = new List<string>();
+            MediaLocationFactory = new MediaLocationFactory();
             ValidateItems = true;
         }
 
@@ -35,13 +36,24 @@ namespace MediaLibrary
 
         public List<IItemFactory> ItemFactories { get; set; }
 
+        public IMediaLocationFactory MediaLocationFactory { get; set; }
+
         public bool ValidateItems { get; set; } 
 
         public ItemRepository ItemRepository { get; set; }
-        public List<IFolderMediaLocation> RootLocations { get { return rootLocations; } }
+        public List<IMediaLocation> RootLocations { get { return rootLocations; } }
 
-        public void AddRootPath(string path) {
-            rootLocations.Add(new FolderMediaLocation(path, null));
+        public string RootPath  
+        {
+            set
+            {
+                rootLocations.Clear();
+                if (System.IO.Directory.Exists(value)) {
+                    rootLocations.Add(new FolderMediaLocation(value, null));
+                } else { 
+                    rootLocations.Add(new MediaLocation(value, null));
+                }
+            }
         }
 
         

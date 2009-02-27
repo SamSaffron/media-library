@@ -6,8 +6,7 @@ using Microsoft.Win32;
 using System.IO;
 
 namespace MediaLibrary {
-    class DefaultItemFactory : IItemFactory {
- 
+    class ItemFactory : IItemFactory {
 
         public Item CreateItem(IMediaLocation location, Library library) 
         {

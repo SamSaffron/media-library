@@ -8,7 +8,7 @@ using MediaLibrary.Helpers;
 namespace MediaLibrary {
     public class MediaLocation : IMediaLocation {
 
-        public MediaLocation(string path, FolderMediaLocation parent) {
+        public MediaLocation(string path, IFolderMediaLocation parent) {
             this.Path = path;
             this.Parent = parent;
             id = new Lazy<Guid>(Path.GetMD5); 
@@ -22,6 +22,11 @@ namespace MediaLibrary {
             get { return id.Value; }
         }
 
+        public string Contents {
+            get {
+                return File.ReadAllText(Path);
+            }
+        }
 
     }
 }

@@ -5,5 +5,6 @@ namespace MediaLibrary {
         IFolderMediaLocation Parent { get; }
         string Path { get; }
         Guid Id {get; }
+        string Contents { get; }
     }
 }

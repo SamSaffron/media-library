@@ -45,14 +45,18 @@
     <Compile Include="Caching\IndexedLinkedList.cs" />
     <Compile Include="Caching\LruCache.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="DefaultItemFactory.cs" />
+    <Compile Include="Factories\ItemFactory.cs" />
+    <Compile Include="Factories\MediaLocationFactory.cs" />
     <Compile Include="FolderMediaLocation.cs" />
     <Compile Include="Helpers\EncryptionHelpers.cs" />
+    <Compile Include="Helpers\FileFormatHelpers.cs" />
     <Compile Include="Helpers\Lazy.cs" />
+    <Compile Include="Helpers\ShortcutResolver.cs" />
     <Compile Include="Helpers\SupportForExtensions.cs" />
     <Compile Include="Helpers\VideoHelpers.cs" />
     <Compile Include="Interfaces\IFolderMediaLocation.cs" />
     <Compile Include="Interfaces\IMediaLocation.cs" />
+    <Compile Include="Interfaces\IMediaLocationFactory.cs" />
     <Compile Include="ItemTypes\Actor.cs" />
     <Compile Include="ItemTypes\Director.cs" />
     <Compile Include="ItemTypes\Episode.cs" />
@@ -63,7 +67,6 @@
     <Compile Include="ItemTypes\Movie.cs" />
     <Compile Include="ItemTypes\Series.cs" />
     <Compile Include="ItemTypes\Video.cs" />
-    <Compile Include="ItemTypes\VirtualFolder.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="MediaLocation.cs" />
     <Compile Include="Metadata.cs" />
@@ -83,6 +86,8 @@
     <Compile Include="Providers\TvDbProvider.cs" />
     <Compile Include="Sorting\ItemSorter.cs" />
     <Compile Include="Sorting\SortOrder.cs" />
+    <Compile Include="VirtualFolder.cs" />
+    <Compile Include="VirtualFolderMediaLocation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

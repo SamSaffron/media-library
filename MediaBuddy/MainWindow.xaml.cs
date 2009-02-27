@@ -24,14 +24,30 @@ namespace MediaBuddy {
             InitializeComponent();
 
             var config = Configuration.DefaultVideoLibraryConfig;
-            config.AddRootPath(@"C:\ProgramData\MediaBrowser\StartupFolder");
+            config.RootPath = @"C:\ProgramData\MediaBrowser\StartupFolder";
             
             library = Library.Initialize(config);
+            var rootItem = library.GetRootItems()[0] as Folder;
+            currentFolder.ItemsSource = rootItem.Children;
+            currentFolder.DisplayMemberPath = "Name";
 
-            foreach (var item in library.GetRootItems()) {
-                currentFolder.Items.Add(item);
+        }
+
+        private void currentFolder_KeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter) {
+                var folder = currentFolder.SelectedItem as Folder;
+                if (folder != null) {
+                    currentFolder.ItemsSource = folder.Children;
+                }
+            } else if (e.Key == Key.Back) { 
+                var item = currentFolder.SelectedItem as Item;
+                if (item.Parent != null && item.Parent.Parent != null) {
+                    var folder = item.Parent.Parent as Folder;
+                    if (folder != null) {
+                        currentFolder.ItemsSource = folder.Children;
+                    }
+                }
             }
-
         }
     }
 }

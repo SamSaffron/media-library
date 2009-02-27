@@ -29,5 +29,7 @@ namespace MediaLibraryTests {
                 return Path.GetMD5();
             }
         }
+
+        public string Contents { get; set; }
     }
 }

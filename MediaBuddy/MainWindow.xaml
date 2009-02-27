@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Media Buddy" Height="503" Width="704">
     <Grid>
-    	<ListBox IsSynchronizedWithCurrentItem="True" Margin="35,71,45,37" x:Name="currentFolder"/>
-    	<Label Margin="35,20,112,0" VerticalAlignment="Top" Height="47" Content="c:\programdata\medialibrary\bla" FontSize="16" x:Name="location"/>
+    	<ListBox IsSynchronizedWithCurrentItem="True" Margin="35,71,45,37" x:Name="currentFolder" KeyDown="currentFolder_KeyDown" />
+    	<Label Margin="35,20,112,0" VerticalAlignment="Top" Height="47" Content="{Binding ElementName=currentFolder, Path=SelectedItem.Name}" FontSize="16" x:Name="location"/>
     </Grid>
 </Window>

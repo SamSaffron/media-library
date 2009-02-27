@@ -13,9 +13,17 @@ namespace MediaLibraryTests
     {
 
         [Test]
-        public void TestLibraryRepositoryInteracation() { 
-           
-        
+        public void TestVirtualFolder() {
+            MockMediaLocation vf = new MockMediaLocation("movies.vf");
+            vf.Contents = @"
+folder: \\10.0.0.4\videos\Movies
+image: \\10.0.0.4\videos\Movies\folder.png
+";
+
+            var config = Configuration.DefaultVideoLibraryConfig;
+            config.RootLocations.Add(vf);
+            var library = Library.Initialize(config);
+
         }
 
 
